@@ -10,248 +10,999 @@
 
 <style>
 :root{
---bg:#0c1220;
---panel:#121b2f;
---accent:#3b82f6;
---ok:#22c55e;
---warn:#f59e0b;
---danger:#ef4444;
---text:#e5e7eb;
---muted:#94a3b8;
---radius:14px;
+  --bg:#0b1220;
+  --panel:#111b30;
+  --panel2:#0f172a;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --line:rgba(148,163,184,.18);
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+  --radius:16px;
+  --ok:#22c55e;
+  --warn:#f59e0b;
+  --bad:#ef4444;
+  --accent:#60a5fa;
 }
-
 *{box-sizing:border-box}
 body{
-margin:0;
-font-family:Inter;
-background:linear-gradient(135deg,#0c1220,#111b30);
-color:var(--text);
-overflow-x:hidden;
+  margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
+  background: radial-gradient(1000px 600px at 20% 0%, rgba(96,165,250,.18), transparent 60%),
+              radial-gradient(800px 500px at 90% 10%, rgba(34,197,94,.14), transparent 55%),
+              var(--bg);
+  color:var(--text);
 }
-
-.wrap{max-width:1200px;margin:auto;padding:20px}
-
-.panel{
-background:var(--panel);
-border-radius:var(--radius);
-padding:18px;
-margin-bottom:18px;
-box-shadow:0 10px 30px rgba(0,0,0,.4);
-animation:fadeIn .5s ease;
-}
-
-@keyframes fadeIn{
-from{opacity:0;transform:translateY(10px)}
-to{opacity:1;transform:translateY(0)}
-}
-
-button{
-cursor:pointer;
-background:rgba(59,130,246,.2);
-border:1px solid rgba(59,130,246,.4);
-color:white;
-padding:8px 14px;
-border-radius:10px;
-transition:.3s;
-}
-button:hover{background:rgba(59,130,246,.4)}
-
-nav button{margin-right:10px;margin-bottom:10px}
-
-.card{
-background:#0f172a;
-padding:12px;
-border-radius:12px;
-margin-bottom:10px;
-}
-
+a{color:inherit}
 header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:20px;
-background:#0f172a;
+  position:sticky; top:0; z-index:10;
+  backdrop-filter: blur(10px);
+  background: rgba(11,18,32,.65);
+  border-bottom:1px solid var(--line);
 }
-
+.wrap{max-width:1200px; margin:0 auto; padding:18px 18px;}
+.topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap}
+.brand{display:flex; align-items:center; gap:12px;}
 .logo{
-font-weight:700;
-font-size:18px;
-color:var(--accent);
+  width:42px; height:42px; border-radius:12px;
+  background: linear-gradient(135deg, rgba(96,165,250,.9), rgba(34,197,94,.8));
+  box-shadow: var(--shadow);
 }
+.title{display:flex; flex-direction:column; line-height:1.1}
+.title b{font-size:15px}
+.title span{font-size:12px; color:var(--muted)}
+.pill{
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px; border:1px solid var(--line);
+  border-radius:999px; background: rgba(17,27,48,.6);
+}
+.dot{width:10px; height:10px; border-radius:999px; background: var(--ok); box-shadow: 0 0 0 6px rgba(34,197,94,.15);}
+.small{font-size:12px; color:var(--muted)}
+.badge{
+  font-size:11px; padding:4px 8px; border-radius:999px;
+  border:1px solid var(--line); color:var(--muted);
+  background: rgba(17,27,48,.5);
+  white-space:nowrap;
+}
+.badge.ok{color:#bbf7d0; border-color:rgba(34,197,94,.35); background:rgba(34,197,94,.10)}
+.badge.warn{color:#fde68a; border-color:rgba(245,158,11,.35); background:rgba(245,158,11,.10)}
+.badge.bad{color:#fecaca; border-color:rgba(239,68,68,.35); background:rgba(239,68,68,.10)}
+.panel{
+  background: rgba(17,27,48,.72);
+  border:1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+.panel .head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 14px;
+  border-bottom:1px solid var(--line);
+  background: rgba(15,23,42,.4);
+  gap:10px; flex-wrap:wrap
+}
+.panel .head h3{margin:0; font-size:14px}
+.panel .head .meta{font-size:12px; color:var(--muted)}
+.panel .body{padding:14px}
 
-.subtitle{
-font-size:12px;
-color:var(--muted);
+nav.wrap{padding-top:10px}
+.navbtns{display:flex; gap:10px; flex-wrap:wrap}
+button{
+  cursor:pointer; border:1px solid var(--line);
+  background: rgba(17,27,48,.7); color:var(--text);
+  border-radius: 12px; padding:10px 12px; font-weight:600;
+  transition:.2s transform, .2s background;
 }
+button:hover{transform:translateY(-1px); background: rgba(17,27,48,.9)}
+button.primary{border-color:rgba(96,165,250,.45); background:rgba(96,165,250,.12)}
+button.danger{border-color:rgba(239,68,68,.45); background:rgba(239,68,68,.10)}
+button.ghost{background:transparent}
+
+.grid{
+  display:grid; gap:16px;
+  grid-template-columns: 1.2fr .8fr;
+  margin-top:16px;
+}
+@media (max-width: 980px){ .grid{grid-template-columns:1fr} }
+
+.cards{
+  display:grid; grid-template-columns: repeat(4, 1fr);
+  gap:12px;
+}
+@media (max-width:980px){ .cards{grid-template-columns:repeat(2,1fr)} }
+.card{
+  border:1px solid var(--line); border-radius:14px;
+  background: rgba(15,23,42,.55);
+  padding:12px; min-height:92px;
+}
+.k{font-size:12px; color:var(--muted); display:flex; align-items:center; justify-content:space-between; gap:10px}
+.v{font-size:22px; margin-top:8px; font-weight:700}
+
+.row{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px}
+@media (max-width:980px){ .row{grid-template-columns:1fr} }
+
+.controls{display:grid; grid-template-columns: 1fr; gap:12px;}
+.toggle{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:12px; border:1px solid var(--line); border-radius:14px;
+  background: rgba(15,23,42,.55);
+}
+.btnrow{display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end}
+input[type="range"]{width: 180px;}
+
+.log{
+  height: 240px; overflow:auto; padding-right:6px;
+  display:flex; flex-direction:column; gap:10px;
+}
+.event{
+  border:1px solid var(--line); border-radius:12px;
+  background: rgba(15,23,42,.55);
+  padding:10px 12px;
+  font-size:12px; color:var(--muted);
+}
+.event b{color:var(--text)}
+footer{color:var(--muted); font-size:12px; padding:22px 18px; text-align:center}
+canvas{max-height:280px}
+
+.section{display:none}
+.section.active{display:block}
+
+.hr{height:1px;background:var(--line); margin:10px 0}
+
+.toastwrap{
+  position:fixed; top:18px; right:18px; z-index:9998;
+  display:flex; flex-direction:column; gap:10px;
+}
+.toast{
+  width:min(360px, calc(100vw - 36px));
+  border:1px solid var(--line);
+  background: rgba(17,27,48,.92);
+  border-radius:14px;
+  box-shadow: var(--shadow);
+  padding:12px;
+  animation: slideIn .18s ease;
+}
+@keyframes slideIn{from{transform:translateX(10px);opacity:0}to{transform:translateX(0);opacity:1}}
 
 #loginScreen{
-position:fixed;
-inset:0;
-background:#0c1220;
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:9999;
-animation:fadeIn 1s;
+  position:fixed; inset:0; z-index:9999;
+  background: radial-gradient(900px 600px at 20% 0%, rgba(96,165,250,.18), transparent 60%),
+              radial-gradient(700px 500px at 90% 10%, rgba(34,197,94,.14), transparent 55%),
+              #070d18;
+  display:flex; align-items:center; justify-content:center;
 }
-
 .loginBox{
-background:#111b30;
-padding:30px;
-border-radius:16px;
-width:320px;
-box-shadow:0 10px 40px rgba(0,0,0,.6);
-text-align:center;
+  width: 360px;
+  border:1px solid var(--line);
+  background: rgba(17,27,48,.78);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  overflow:hidden;
 }
-
-input{
-width:100%;
-padding:10px;
-margin:10px 0;
-background:#0f172a;
-border:1px solid #1e293b;
-border-radius:8px;
-color:white;
+.loginHead{
+  padding:16px;
+  border-bottom:1px solid var(--line);
+  background: rgba(15,23,42,.45);
+  display:flex; gap:12px; align-items:center;
 }
-
-.toast{
-position:fixed;
-top:20px;
-right:20px;
-background:#111b30;
-padding:12px 18px;
-border-radius:10px;
-box-shadow:0 5px 20px rgba(0,0,0,.5);
-animation:slideIn .4s ease;
+.loginHead .name{font-weight:800}
+.loginBody{padding:16px}
+.field{display:flex; flex-direction:column; gap:6px; margin-top:10px}
+.field label{font-size:12px; color:var(--muted)}
+.field input, .field select{
+  padding:10px 12px; border-radius:12px;
+  border:1px solid var(--line);
+  background: rgba(15,23,42,.65);
+  color: var(--text);
+  outline:none;
 }
-
-@keyframes slideIn{
-from{transform:translateX(100%);opacity:0}
-to{transform:translateX(0);opacity:1}
-}
+.loginActions{display:flex; gap:10px; margin-top:14px}
+.hint{font-size:12px; color:var(--muted); margin-top:10px}
 </style>
 </head>
 
 <body>
 
+<div class="toastwrap" id="toastWrap"></div>
+
 <!-- LOGIN -->
 <div id="loginScreen">
-<div class="loginBox">
-<h2 style="color:#3b82f6">MbareTech Buildings</h2>
-<div class="subtitle">Secure Infrastructure Access</div>
-<input type="text" placeholder="Usuario">
-<input type="password" placeholder="Contraseña">
-<button onclick="enterSystem()">Ingresar</button>
-</div>
+  <div class="loginBox">
+    <div class="loginHead">
+      <div class="logo"></div>
+      <div class="title">
+        <div class="name">MbareTech Buildings</div>
+        <span>Secure Infrastructure Access</span>
+      </div>
+    </div>
+    <div class="loginBody">
+      <div class="field">
+        <label>Usuario</label>
+        <input id="loginUser" placeholder="mbaretech.operator" value="mbaretech.operator">
+      </div>
+      <div class="field">
+        <label>Contraseña</label>
+        <input id="loginPass" type="password" placeholder="••••••••" value="demo">
+      </div>
+      <div class="field">
+        <label>Rol</label>
+        <select id="loginRole">
+          <option value="Admin">Admin</option>
+          <option value="Operador" selected>Operador</option>
+        </select>
+      </div>
+      <div class="loginActions">
+        <button class="primary" style="flex:1" onclick="enterSystem()">Ingresar</button>
+        <button class="ghost" onclick="demoFill()">Demo</button>
+      </div>
+      <div class="hint">Demo académica. No requiere credenciales reales.</div>
+    </div>
+  </div>
 </div>
 
 <header>
-<div>
-<div class="logo">MbareTech Buildings</div>
-<div class="subtitle">AI Smart Infrastructure Platform</div>
-</div>
-<div id="clock"></div>
+  <div class="wrap topbar">
+    <div class="brand">
+      <div class="logo"></div>
+      <div class="title">
+        <b>MbareTech Buildings — Smart Control</b>
+        <span id="clock">Sincronizando…</span>
+      </div>
+    </div>
+
+    <div class="pill">
+      <div class="dot" id="connDot"></div>
+      <div>
+        <div style="font-weight:700;font-size:13px" id="connText">Conectando a Central…</div>
+        <div class="small" id="healthText">Nodo: MBT-CENTRAL-01 • Latencia: —</div>
+      </div>
+    </div>
+
+    <div class="pill">
+      <div class="dot" id="modeDot"></div>
+      <div>
+        <div style="font-weight:700;font-size:13px" id="modeText">Modo IA: Predictivo</div>
+        <div class="small" id="userText">Usuario: — • Rol: —</div>
+      </div>
+    </div>
+  </div>
 </header>
 
-<nav class="wrap">
-<button onclick="showSection('dashboard')">Dashboard</button>
-<button onclick="showSection('security')">Seguridad</button>
-<button onclick="showSection('alerts')">Alertas</button>
+<nav class="wrap" style="padding-top:12px;">
+  <div class="navbtns">
+    <button class="primary" onclick="showSection('dashboard')">Dashboard</button>
+    <button onclick="showSection('security')">Seguridad</button>
+    <button onclick="showSection('ai')">IA Predictiva</button>
+    <button onclick="showSection('alerts')">Alertas</button>
+    <button onclick="showSection('clients')">Clientes</button>
+    <button onclick="showSection('settings')">Ajustes</button>
+  </div>
 </nav>
 
 <main class="wrap">
 
-<section id="dashboardSection">
-<div class="panel">
-<h3>Indicadores en Tiempo Real</h3>
-<div class="card">Consumo: <span id="power">120</span> kW</div>
-<div class="card">Temperatura: <span id="temp">22</span> °C</div>
-<div class="card">CO₂: <span id="co2">650</span> ppm</div>
-<div class="card">Ocupación: <span id="occ">60</span>%</div>
-</div>
+  <!-- ================= DASHBOARD ================= -->
+  <section id="dashboardSection" class="section active">
+    <div class="panel">
+      <div class="head">
+        <h3>Indicadores en tiempo real</h3>
+        <div class="meta" id="updated">Actualizado: —</div>
+      </div>
+      <div class="body">
+        <div class="cards">
+          <div class="card">
+            <div class="k">Consumo instantáneo <span class="badge ok" id="bPower">Óptimo</span></div>
+            <div class="v"><span id="power">—</span> kW</div>
+          </div>
+          <div class="card">
+            <div class="k">Temperatura promedio <span class="badge" id="bTemp">Auto</span></div>
+            <div class="v"><span id="temp">—</span> °C</div>
+          </div>
+          <div class="card">
+            <div class="k">CO₂ promedio <span class="badge ok" id="bCO2">Normal</span></div>
+            <div class="v"><span id="co2">—</span> ppm</div>
+          </div>
+          <div class="card">
+            <div class="k">Ocupación <span class="badge" id="bOcc">Estimado</span></div>
+            <div class="v"><span id="occ">—</span>%</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<div class="panel">
-<h3>Consumo Energético</h3>
-<canvas id="chartPower"></canvas>
-</div>
-</section>
+    <div class="grid">
+      <section class="panel">
+        <div class="head">
+          <h3>Consumo (últimas 12 horas)</h3>
+          <div class="meta">kW • Telemetría simulada</div>
+        </div>
+        <div class="body">
+          <canvas id="chartPower"></canvas>
+        </div>
+      </section>
 
-<section id="securitySection" style="display:none">
-<div class="panel">
-<h3>Centro de Seguridad</h3>
-<div class="card">Cámara Lobby — ● LIVE</div>
-<div class="card">Cámara Parking — ● LIVE</div>
-<div class="card">Accesos — Sin incidentes</div>
-</div>
-</section>
+      <section class="panel">
+        <div class="head">
+          <h3>Control de ambientes</h3>
+          <div class="meta" id="roleLimitText">Permisos: —</div>
+        </div>
+        <div class="body controls">
+          <div class="toggle">
+            <div>
+              <b>Modo IA automático</b><br>
+              <small>Optimiza consumo y confort</small>
+            </div>
+            <button class="primary" id="btnIA">Activado</button>
+          </div>
 
-<section id="alertsSection" style="display:none">
-<div class="panel">
-<h3>Centro de Alertas</h3>
-<div id="alertsList">
-<div class="card">Sistema iniciado correctamente.</div>
-</div>
-</div>
-</section>
+          <div class="toggle">
+            <div>
+              <b>Iluminación</b><br>
+              <small>Ajuste adaptativo por ocupación</small>
+            </div>
+            <div class="btnrow">
+              <button id="btnLights">Auto</button>
+              <button class="danger" id="btnAllOff">Apagar todo</button>
+            </div>
+          </div>
+
+          <div class="toggle">
+            <div>
+              <b>Climatización</b><br>
+              <small>Setpoint objetivo</small>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;justify-content:flex-end">
+              <input id="rangeTemp" type="range" min="18" max="28" value="22"/>
+              <span style="font-weight:700"><span id="setTemp">22</span>°C</span>
+            </div>
+          </div>
+
+          <div class="toggle">
+            <div>
+              <b>Ventilación</b><br>
+              <small>Control por CO₂ y humedad</small>
+            </div>
+            <button id="btnVent">Auto</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="row">
+      <section class="panel">
+        <div class="head">
+          <h3>Confort por piso</h3>
+          <div class="meta">Temp / CO₂ (simulado)</div>
+        </div>
+        <div class="body">
+          <canvas id="chartComfort"></canvas>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="head">
+          <h3>Energía por piso</h3>
+          <div class="meta">Distribución de consumo</div>
+        </div>
+        <div class="body">
+          <canvas id="chartFloorPower"></canvas>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ================= SEGURIDAD ================= -->
+  <section id="securitySection" class="section">
+    <div class="panel">
+      <div class="head">
+        <h3>Centro de Seguridad</h3>
+        <div class="meta">Monitoreo • Control de accesos</div>
+      </div>
+      <div class="body" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px">
+        <div class="card">
+          <div class="k">Cámara Lobby <span class="badge ok">LIVE</span></div>
+          <div style="height:160px;border-radius:12px;background:#000;display:flex;align-items:center;justify-content:center;color:#22c55e;font-weight:800">
+            ● STREAM
+          </div>
+          <div class="small" style="margin-top:8px">Detección: Normal • Rostros: 3 • Movimiento: Bajo</div>
+        </div>
+
+        <div class="card">
+          <div class="k">Cámara Parking <span class="badge ok">LIVE</span></div>
+          <div style="height:160px;border-radius:12px;background:#000;display:flex;align-items:center;justify-content:center;color:#22c55e;font-weight:800">
+            ● STREAM
+          </div>
+          <div class="small" style="margin-top:8px">Detección: Normal • Vehículos: 12 • Movimiento: Medio</div>
+        </div>
+
+        <div class="card">
+          <div class="k">Control de accesos <span class="badge" id="accessBadge">OK</span></div>
+          <div style="margin-top:8px">
+            <div class="event"><b>Acceso PB</b><br>Último evento: Tarjeta válida • 17:02:11</div>
+            <div class="event"><b>Acceso 3°</b><br>Último evento: Biométrico válido • 16:58:03</div>
+          </div>
+          <div class="btnrow" style="margin-top:10px">
+            <button id="btnLockdown" class="danger">Lockdown</button>
+            <button id="btnResetAccess">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= IA PREDICTIVA ================= -->
+  <section id="aiSection" class="section">
+    <div class="panel">
+      <div class="head">
+        <h3>IA Predictiva</h3>
+        <div class="meta">Explicaciones • Recomendaciones • Acciones</div>
+      </div>
+      <div class="body" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="card">
+          <div class="k">Resumen (última hora) <span class="badge ok" id="aiScore">Score: 92</span></div>
+          <div style="margin-top:10px" class="small" id="aiSummary">
+            Calculando impacto de optimización…
+          </div>
+          <div class="hr"></div>
+          <div class="small">
+            <b>Modelo:</b> MBT-Predict v2.1 (simulado)<br>
+            <b>Señales:</b> ocupación, CO₂, setpoint, historial, tarifa<br>
+            <b>Objetivo:</b> minimizar kWh manteniendo confort.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="k">Acciones sugeridas <span class="badge" id="aiPlanBadge">Pendiente</span></div>
+          <div id="aiPlan" style="margin-top:10px;display:flex;flex-direction:column;gap:10px">
+            <!-- se llena por JS -->
+          </div>
+          <div class="btnrow" style="margin-top:10px">
+            <button class="primary" id="btnApplyPlan">Aplicar plan</button>
+            <button id="btnRecalcAI">Recalcular</button>
+          </div>
+          <div class="small" style="margin-top:10px" id="aiExplain">
+            La IA explicará por qué recomienda cada acción.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="head">
+        <h3>Registro de decisiones</h3>
+        <div class="meta">Trazabilidad</div>
+      </div>
+      <div class="body">
+        <div class="log" id="aiLog"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ALERTAS ================= -->
+  <section id="alertsSection" class="section">
+    <div class="panel">
+      <div class="head">
+        <h3>Centro de Alertas</h3>
+        <div class="meta">Eventos del sistema • Severidad</div>
+      </div>
+      <div class="body">
+        <div class="btnrow" style="justify-content:flex-start">
+          <button id="btnTestInfo">Generar INFO</button>
+          <button id="btnTestWarn">Generar WARNING</button>
+          <button class="danger" id="btnTestBad">Generar CRÍTICA</button>
+        </div>
+        <div class="hr"></div>
+        <div class="log" id="alertsList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CLIENTES ================= -->
+  <section id="clientsSection" class="section">
+    <div class="panel">
+      <div class="head">
+        <h3>Clientes</h3>
+        <div class="meta">Portfolio (demo) • SaaS</div>
+      </div>
+      <div class="body" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px">
+        <div class="card">
+          <div class="k">Cliente <span class="badge ok">Activo</span></div>
+          <div class="v" style="font-size:18px">Municipalidad de Mbare</div>
+          <div class="small">Edificios: 3 • Sensores: 480 • Ahorro: 17%</div>
+        </div>
+        <div class="card">
+          <div class="k">Cliente <span class="badge ok">Activo</span></div>
+          <div class="v" style="font-size:18px">Parque Empresarial Norte</div>
+          <div class="small">Edificios: 5 • Sensores: 820 • Ahorro: 22%</div>
+        </div>
+        <div class="card">
+          <div class="k">Cliente <span class="badge warn">Pilot</span></div>
+          <div class="v" style="font-size:18px">Hospital Central</div>
+          <div class="small">Edificios: 1 • Sensores: 260 • SLA: 99.5%</div>
+        </div>
+        <div class="card">
+          <div class="k">Planes <span class="badge">SaaS</span></div>
+          <div class="small">
+            <b>Standard:</b> monitoreo + alertas<br>
+            <b>Pro:</b> IA predictiva + reportes<br>
+            <b>Enterprise:</b> integración + soporte 24/7
+          </div>
+          <div class="btnrow" style="margin-top:10px;justify-content:flex-start">
+            <button class="primary" id="btnExportDemo">Exportar reporte (demo)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AJUSTES ================= -->
+  <section id="settingsSection" class="section">
+    <div class="panel">
+      <div class="head">
+        <h3>Ajustes</h3>
+        <div class="meta">Preferencias • Permisos</div>
+      </div>
+      <div class="body" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="card">
+          <div class="k">Configuración demo</div>
+          <div class="small" style="margin-top:8px">
+            <b>Servidor:</b> MBT-CENTRAL-01<br>
+            <b>Modo:</b> Simulación académica<br>
+            <b>Ambiente:</b> Producción (mock)
+          </div>
+          <div class="btnrow" style="margin-top:10px;justify-content:flex-start">
+            <button id="btnReconnect">Reconectar</button>
+            <button id="btnLogout">Cerrar sesión</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="k">Permisos por rol</div>
+          <div class="small" style="margin-top:8px">
+            <b>Admin:</b> controla lockdown, setpoints y apagado total.<br>
+            <b>Operador:</b> puede monitorear y operar en modo Auto/Manual limitado.
+          </div>
+          <div class="hr"></div>
+          <div class="small" id="roleHint">Rol activo: —</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
 </main>
 
+<footer>
+  Demo académica • MbareTech Buildings • Plataforma IA (simulación)
+</footer>
+
 <script>
+/* ------------------ Helpers ------------------ */
+const $ = (id)=>document.getElementById(id);
+const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
+const nowStr=()=> new Date().toLocaleString('es-AR',{hour12:false});
+
+function setBadge(el, type, text){
+  el.className = "badge" + (type ? (" " + type) : "");
+  el.textContent = text;
+}
+function toast(title, msg, type="ok"){
+  const t = document.createElement("div");
+  t.className = "toast";
+  const icon = type==="bad" ? "⛔" : (type==="warn" ? "⚠️" : "✅");
+  t.innerHTML = `<div style="display:flex;gap:10px">
+      <div style="font-size:18px">${icon}</div>
+      <div>
+        <div style="font-weight:800">${title}</div>
+        <div class="small" style="margin-top:2px">${msg}</div>
+      </div>
+    </div>`;
+  $("toastWrap").appendChild(t);
+  setTimeout(()=>t.remove(), 4200);
+}
+function logTo(elId, title, detail, sev="info"){
+  const div=document.createElement("div");
+  div.className="event";
+  const tag = sev==="bad" ? "CRÍTICA" : (sev==="warn" ? "WARNING" : "INFO");
+  div.innerHTML = `<b>${tag} — ${title}</b><br>${detail}<br><span style="opacity:.8">${nowStr()}</span>`;
+  const log=$(elId);
+  log.prepend(div);
+  while(log.children.length>18) log.removeChild(log.lastChild);
+}
+
+/* ------------------ Roles / Login ------------------ */
+let session = { user:"—", role:"—" };
+
+function demoFill(){
+  $("loginUser").value="mbaretech.operator";
+  $("loginPass").value="demo";
+  $("loginRole").value="Operador";
+}
+
 function enterSystem(){
-document.getElementById("loginScreen").style.display="none";
+  session.user = $("loginUser").value || "mbaretech.user";
+  session.role = $("loginRole").value || "Operador";
+  $("userText").textContent = `Usuario: ${session.user} • Rol: ${session.role}`;
+  $("roleHint").textContent = `Rol activo: ${session.role}`;
+  applyRolePermissions();
+  $("loginScreen").style.display="none";
+  toast("Sesión iniciada", `Bienvenido/a, ${session.user}`, "ok");
+  connectCentral(true);
 }
 
+function applyRolePermissions(){
+  const isAdmin = session.role === "Admin";
+  $("btnAllOff").disabled = !isAdmin;
+  $("btnLockdown").disabled = !isAdmin;
+  $("btnApplyPlan").disabled = !isAdmin;
+
+  $("roleLimitText").textContent = isAdmin ? "Permisos: Admin (control total)" : "Permisos: Operador (limitado)";
+  if(!isAdmin){
+    $("btnAllOff").classList.add("ghost");
+    $("btnLockdown").classList.add("ghost");
+  }
+}
+
+/* ------------------ Navegación ------------------ */
+const sections = ["dashboard","security","ai","alerts","clients","settings"];
 function showSection(name){
-document.getElementById("dashboardSection").style.display="none";
-document.getElementById("securitySection").style.display="none";
-document.getElementById("alertsSection").style.display="none";
-document.getElementById(name+"Section").style.display="block";
+  sections.forEach(s=>{
+    const el = $(s+"Section");
+    if(el) el.classList.remove("active");
+  });
+  const target = $(name+"Section");
+  if(target) target.classList.add("active");
 }
 
-const ctx=document.getElementById("chartPower");
-new Chart(ctx,{
-type:'line',
-data:{
-labels:["1h","2h","3h","4h","5h","6h"],
-datasets:[{data:[110,120,130,125,140,135]}]
-},
-options:{responsive:true}
+/* ------------------ Estado simulado ------------------ */
+let state = {
+  ia:true,
+  lights:"Auto",
+  vent:"Auto",
+  setTemp:22,
+  power:118,
+  temp:22.4,
+  co2:640,
+  occ:58,
+  latency:42,
+  connected:false
+};
+
+/* ------------------ Conexión central (simulada) ------------------ */
+function connectCentral(force=false){
+  $("connText").textContent = "Conectando a Central…";
+  $("connDot").style.background = "var(--warn)";
+  state.connected = false;
+
+  const delay = force ? 800 : 600 + Math.random()*1400;
+  setTimeout(()=>{
+    state.connected = true;
+    $("connText").textContent = "Conectado a Central";
+    $("connDot").style.background = "var(--ok)";
+    toast("Central online", "Sincronización completa con MBT-CENTRAL-01", "ok");
+    logTo("alertsList","Conexión", "Canal seguro establecido con servidor central.", "info");
+  }, delay);
+}
+
+/* ------------------ Header updates ------------------ */
+function updateHeader(){
+  $("clock").textContent = "Conectado • " + nowStr();
+  $("updated").textContent = "Actualizado: " + nowStr();
+
+  state.latency = clamp(state.latency + (Math.random()*6-3), 18, 95);
+  $("healthText").textContent = `Nodo: MBT-CENTRAL-01 • Latencia: ${state.latency.toFixed(0)}ms`;
+
+  $("modeText").textContent = "Modo IA: " + (state.ia ? "Predictivo" : "Manual");
+  $("modeDot").style.background = state.ia ? "var(--ok)" : "var(--warn)";
+}
+
+/* ------------------ KPI updates ------------------ */
+function updateKPIs(){
+  $("power").textContent = state.power.toFixed(0);
+  $("temp").textContent = state.temp.toFixed(1);
+  $("co2").textContent = state.co2.toFixed(0);
+  $("occ").textContent = state.occ.toFixed(0);
+
+  setBadge($("bPower"), state.power < 140 ? "ok" : "warn", state.power < 140 ? "Óptimo" : "Alto");
+  setBadge($("bCO2"), state.co2 < 900 ? "ok" : (state.co2<1100?"warn":"bad"), state.co2 < 900 ? "Normal" : (state.co2<1100?"Elevado":"Crítico"));
+  setBadge($("bTemp"), "", state.ia ? "Auto" : "Manual");
+}
+
+/* ------------------ Charts ------------------ */
+const labels = Array.from({length:12}, (_,i)=>`${(11-i)}h`).reverse();
+let powerData = labels.map(()=> 110 + Math.random()*25);
+
+const chartPower = new Chart($("chartPower"), {
+  type:'line',
+  data:{ labels, datasets:[{ label:'Consumo (kW)', data:powerData, tension:.35, fill:true, borderWidth:2, pointRadius:2 }]},
+  options:{
+    responsive:true,
+    plugins:{ legend:{display:false} },
+    scales:{
+      x:{ grid:{display:false}, ticks:{ color:'rgba(229,231,235,.7)'} },
+      y:{ grid:{ color:'rgba(148,163,184,.18)'}, ticks:{ color:'rgba(229,231,235,.7)'} }
+    }
+  }
 });
 
-function updateData(){
-document.getElementById("power").textContent=Math.floor(100+Math.random()*50);
-document.getElementById("temp").textContent=(20+Math.random()*5).toFixed(1);
-document.getElementById("co2").textContent=Math.floor(500+Math.random()*300);
-document.getElementById("occ").textContent=Math.floor(40+Math.random()*40);
+const floors = ["PB","1°","2°","3°","4°","5°"];
+let tData = floors.map(()=> 21.2 + Math.random()*2.2);
+let cData = floors.map(()=> 560 + Math.random()*240);
+
+const chartComfort = new Chart($("chartComfort"), {
+  type:'bar',
+  data:{
+    labels:floors,
+    datasets:[
+      { label:'Temperatura (°C)', data:tData, borderWidth:1 },
+      { label:'CO₂ (ppm)', data:cData, borderWidth:1 }
+    ]
+  },
+  options:{
+    responsive:true,
+    plugins:{ legend:{ labels:{ color:'rgba(229,231,235,.8)'} } },
+    scales:{
+      x:{ grid:{display:false}, ticks:{ color:'rgba(229,231,235,.7)'} },
+      y:{ grid:{ color:'rgba(148,163,184,.18)'}, ticks:{ color:'rgba(229,231,235,.7)'} }
+    }
+  }
+});
+
+let floorPower = floors.map(()=> 14 + Math.random()*10);
+const chartFloorPower = new Chart($("chartFloorPower"),{
+  type:'bar',
+  data:{
+    labels:floors,
+    datasets:[{ label:'kW por piso', data: floorPower, borderWidth:1 }]
+  },
+  options:{
+    responsive:true,
+    plugins:{ legend:{ labels:{ color:'rgba(229,231,235,.8)'} } },
+    scales:{
+      x:{ grid:{display:false}, ticks:{ color:'rgba(229,231,235,.7)'} },
+      y:{ grid:{ color:'rgba(148,163,184,.18)'}, ticks:{ color:'rgba(229,231,235,.7)'} }
+    }
+  }
+});
+
+/* ------------------ IA: plan + explicaciones ------------------ */
+function aiMakePlan(){
+  const score = Math.floor(84 + Math.random()*14);
+  $("aiScore").textContent = `Score: ${score}`;
+  $("aiScore").className = "badge " + (score>92 ? "ok" : (score>88?"warn":"bad"));
+
+  const estSave = (8 + Math.random()*14).toFixed(1);
+  const risk = score>90 ? "Bajo" : (score>86 ? "Medio" : "Alto");
+
+  $("aiSummary").innerHTML = `
+    La IA detectó patrón de ocupación <b>${state.occ.toFixed(0)}%</b> y CO₂ <b>${state.co2.toFixed(0)} ppm</b>.
+    Se proyecta un ahorro de <b>${estSave}%</b> en la próxima hora ajustando ventilación e iluminación.
+    Riesgo de disconfort: <b>${risk}</b>.
+  `;
+
+  const actions = [];
+
+  // reglas simples para generar acciones "creíbles"
+  if(state.co2 > 850) actions.push({t:"Aumentar ventilación", d:"CO₂ elevado; mejora calidad de aire con menor impacto energético."});
+  else actions.push({t:"Mantener ventilación en Auto", d:"CO₂ en rango; Auto sostiene confort sin sobreconsumo."});
+
+  if(state.power > 140) actions.push({t:"Reducir iluminación a Auto", d:"Consumo alto; Auto ajusta por ocupación y luz ambiental."});
+  else actions.push({t:"Optimizar iluminación por zonas", d:"Consumo estable; ajuste fino por áreas de baja ocupación."});
+
+  if(state.temp > state.setTemp + 0.6) actions.push({t:"Bajar setpoint 0.5°C", d:"Temperatura por encima de objetivo; reduce carga de climatización."});
+  else if(state.temp < state.setTemp - 0.6) actions.push({t:"Subir setpoint 0.5°C", d:"Temperatura por debajo de objetivo; evita sobre-enfriamiento."});
+  else actions.push({t:"Mantener setpoint", d:"Temperatura cercana al objetivo; mantener estabilidad térmica."});
+
+  $("aiPlan").innerHTML = actions.map((a,i)=>`
+    <div class="event">
+      <b>Acción ${i+1}: ${a.t}</b><br>
+      ${a.d}
+    </div>
+  `).join("");
+
+  $("aiPlanBadge").textContent = "Listo";
+  $("aiPlanBadge").className = "badge ok";
+  $("aiExplain").textContent = "Las recomendaciones se basan en señales de ocupación, CO₂, setpoint y tendencia de consumo (simulado).";
+
+  logTo("aiLog", "Plan generado", `Score ${score}. Ahorro proyectado ${estSave}%. Riesgo ${risk}.`, "info");
 }
 
-setInterval(updateData,2000);
-
-function showToast(msg){
-const toast=document.createElement("div");
-toast.className="toast";
-toast.textContent=msg;
-document.body.appendChild(toast);
-setTimeout(()=>toast.remove(),4000);
+function aiApplyPlan(){
+  if(session.role!=="Admin"){
+    toast("Permiso denegado", "Solo Admin puede aplicar planes automáticamente.", "warn");
+    return;
+  }
+  // aplicar cambios simulados
+  if(state.co2 > 850){
+    state.vent = "On";
+    $("btnVent").textContent = "On";
+  }else{
+    state.vent = "Auto";
+    $("btnVent").textContent = "Auto";
+  }
+  if(state.power > 140){
+    state.lights = "Auto";
+    $("btnLights").textContent = "Auto";
+  }
+  logTo("aiLog","Plan aplicado",`Ventilación: ${state.vent}. Iluminación: ${state.lights}.`, "info");
+  toast("Plan aplicado", "Acciones ejecutadas por MBT-Predict (simulado).", "ok");
 }
 
-const alertSound=new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+/* ------------------ Simulación IA / telemetría ------------------ */
+function tick(){
+  // fluctuación
+  state.occ = clamp(state.occ + (Math.random()*8-4), 10, 95);
 
-setInterval(()=>{
-if(Math.random()>0.7){
-const div=document.createElement("div");
-div.className="card";
-div.textContent="Optimización energética automática aplicada.";
-document.getElementById("alertsList").prepend(div);
-showToast("Nueva alerta del sistema IA");
-alertSound.play();
+  if(state.ia){
+    const targetPower = 90 + state.occ*0.9 + (state.lights==="On"?20:0);
+    state.power += (targetPower - state.power)*0.15 + (Math.random()*6-3);
+
+    state.temp += (state.setTemp - state.temp)*0.12 + (Math.random()*0.2-0.1);
+
+    const ventFactor = (state.vent==="On") ? 1.25 : (state.vent==="Off" ? 0.6 : 1.0);
+    const co2Target = 520 + state.occ*6.2 / ventFactor;
+    state.co2 += (co2Target - state.co2)*0.10 + (Math.random()*25-12);
+
+    // decisiones automáticas “creíbles”
+    if(state.co2 > 1100){
+      // alerta crítica
+      pushAlert("Calidad de aire crítica", `CO₂ ${state.co2.toFixed(0)} ppm. Reforzar ventilación.`, "bad");
+      state.vent = "On";
+      $("btnVent").textContent="On";
+    }else if(state.co2 > 900 && state.vent!=="On"){
+      state.vent = "On";
+      $("btnVent").textContent = "On";
+      pushAlert("CO₂ elevado", "Activando ventilación reforzada.", "warn");
+      logTo("aiLog","Acción automática","Ventilación aumentada por CO₂ elevado.","info");
+    }
+
+    if(state.power > 160 && state.lights!=="Auto"){
+      state.lights="Auto";
+      $("btnLights").textContent="Auto";
+      pushAlert("Consumo alto", "Iluminación ajustada a Auto.", "warn");
+      logTo("aiLog","Acción automática","Iluminación a Auto por consumo alto.","info");
+    }
+  }else{
+    state.power = clamp(state.power + (Math.random()*10-5), 70, 220);
+    state.temp = clamp(state.temp + (Math.random()*0.4-0.2), 18, 30);
+    state.co2 = clamp(state.co2 + (Math.random()*60-30), 450, 1400);
+  }
+
+  // charts update
+  powerData.push(clamp(state.power + (Math.random()*5-2.5), 60, 220));
+  powerData.shift();
+  chartPower.data.datasets[0].data = powerData;
+  chartPower.update('none');
+
+  tData = floors.map(()=> clamp(state.temp + (Math.random()*0.8-0.4), 18, 28));
+  cData = floors.map(()=> clamp(state.co2 + (Math.random()*120-60), 450, 1400));
+  chartComfort.data.datasets[0].data = tData;
+  chartComfort.data.datasets[1].data = cData;
+  chartComfort.update('none');
+
+  // distribución por piso “coherente”
+  const base = clamp(state.power/10, 8, 22);
+  floorPower = floors.map((_,i)=> clamp(base + (Math.random()*4-2) + (i===2?2:0), 5, 30));
+  chartFloorPower.data.datasets[0].data = floorPower;
+  chartFloorPower.update('none');
+
+  updateHeader();
+  updateKPIs();
 }
-},8000);
 
-setInterval(()=>{
-document.getElementById("clock").textContent=new Date().toLocaleString();
-},1000);
+/* ------------------ Alertas + sonido ------------------ */
+const soundInfo = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
+const soundBad  = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+
+function pushAlert(title, detail, sev="info"){
+  logTo("alertsList", title, detail, sev);
+  if(sev==="bad"){
+    toast("ALERTA CRÍTICA", title, "bad");
+    soundBad.play().catch(()=>{});
+  }else if(sev==="warn"){
+    toast("Warning", title, "warn");
+    soundInfo.play().catch(()=>{});
+  }else{
+    toast("Info", title, "ok");
+  }
+}
+
+/* ------------------ Controles UI ------------------ */
+$("btnIA").onclick = ()=>{
+  state.ia = !state.ia;
+  $("btnIA").textContent = state.ia ? "Activado" : "Desactivado";
+  toast("Modo IA", state.ia ? "IA Predictiva activada" : "Control manual activado", state.ia?"ok":"warn");
+};
+
+$("btnLights").onclick = ()=>{
+  if(state.lights==="Auto") state.lights="On";
+  else if(state.lights==="On") state.lights="Off";
+  else state.lights="Auto";
+  $("btnLights").textContent = state.lights;
+  pushAlert("Iluminación", `Cambio de estado: ${state.lights}`, "info");
+};
+
+$("btnVent").onclick = ()=>{
+  if(state.vent==="Auto") state.vent="On";
+  else if(state.vent==="On") state.vent="Off";
+  else state.vent="Auto";
+  $("btnVent").textContent = state.vent;
+  pushAlert("Ventilación", `Cambio de estado: ${state.vent}`, "info");
+};
+
+$("btnAllOff").onclick = ()=>{
+  if(session.role!=="Admin"){
+    toast("Permiso denegado", "Solo Admin puede ejecutar apagado total.", "warn");
+    return;
+  }
+  state.lights="Off"; state.vent="Off";
+  $("btnLights").textContent="Off";
+  $("btnVent").textContent="Off";
+  pushAlert("Acción crítica", "Apagado general de iluminación y ventilación (demo).", "warn");
+};
+
+$("rangeTemp").oninput = (e)=>{
+  state.setTemp = Number(e.target.value);
+  $("setTemp").textContent = state.setTemp;
+  if(!state.ia) pushAlert("Setpoint", `Setpoint ajustado a ${state.setTemp}°C (Manual)`, "info");
+};
+
+$("btnLockdown").onclick = ()=>{
+  if(session.role!=="Admin"){
+    toast("Permiso denegado", "Solo Admin puede iniciar lockdown.", "warn");
+    return;
+  }
+  $("accessBadge").textContent="LOCKDOWN";
+  $("accessBadge").className="badge bad";
+  pushAlert("Lockdown", "Bloqueo de accesos activado en todo el edificio.", "bad");
+};
+
+$("btnResetAccess").onclick = ()=>{
+  $("accessBadge").textContent="OK";
+  $("accessBadge").className="badge ok";
+  pushAlert("Accesos", "Sistema de accesos normalizado.", "info");
+};
+
+$("btnRecalcAI").onclick = ()=> aiMakePlan();
+$("btnApplyPlan").onclick = ()=> aiApplyPlan();
+
+$("btnTestInfo").onclick = ()=> pushAlert("Evento informativo","Sincronización de telemetría completada.", "info");
+$("btnTestWarn").onclick = ()=> pushAlert("Advertencia","Consumo fuera de umbral en 3° piso.", "warn");
+$("btnTestBad").onclick  = ()=> pushAlert("Crítica","Fallo simulado en compresor HVAC. Requiere atención.", "bad");
+
+$("btnReconnect").onclick = ()=> connectCentral(true);
+
+$("btnLogout").onclick = ()=>{
+  $("loginScreen").style.display="flex";
+  toast("Sesión finalizada","Volviendo a pantalla de acceso.", "warn");
+};
+
+$("btnExportDemo").onclick = ()=>{
+  toast("Reporte", "Exportación simulada: MBT_Report_2026-02-24.pdf", "ok");
+  pushAlert("Reporte generado", "Se generó un reporte (demo) para el cliente seleccionado.", "info");
+};
+
+/* ------------------ Init ------------------ */
+function init(){
+  // pre-carga de logs
+  logTo("alertsList","Sistema iniciado","Telemetría virtual en ejecución. Dashboard listo para demo.","info");
+  logTo("aiLog","Inicialización IA","Modelo MBT-Predict v2.1 cargado (simulado).","info");
+  aiMakePlan();
+
+  updateHeader();
+  updateKPIs();
+  setInterval(tick, 1500);
+
+  // reconexiones aleatorias “reales”
+  setInterval(()=>{
+    if(!state.connected) return;
+    if(Math.random() > 0.93){
+      // simular microcorte
+      state.connected=false;
+      $("connText").textContent="Reconectando…";
+      $("connDot").style.background="var(--warn)";
+      pushAlert("Conectividad","Microcorte detectado. Reintentando enlace…","warn");
+      connectCentral(false);
+    }
+  }, 5000);
+}
+init();
 </script>
 
 </body>
