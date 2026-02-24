@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Edificio IA — Centro de Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root{
+      --bg:#0b1220; --panel:#111b30; --panel2:#0f172a;
+      --text:#e5e7eb; --muted:#94a3b8; --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+      --accent:#60a5fa; --line:rgba(148,163,184,.18);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
+      background: radial-gradient(1000px 600px at 20% 0%, rgba(96,165,250,.18), transparent 60%),
+                  radial-gradient(800px 500px at 90% 10%, rgba(34,197,94,.14), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    header{
+      position:sticky; top:0; z-index:10;
+      backdrop-filter: blur(10px);
+      background: rgba(11,18,32,.65);
+      border-bottom:1px solid var(--line);
+    }
+    .wrap{max-width:1200px; margin:0 auto; padding:18px 18px;}
+    .topbar{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+    .brand{display:flex; align-items:center; gap:12px;}
+    .logo{
+      width:42px; height:42px; border-radius:12px;
+      background: linear-gradient(135deg, rgba(96,165,250,.9), rgba(34,197,94,.8));
+      box-shadow: var(--shadow);
+    }
+    .title{display:flex; flex-direction:column; line-height:1.1}
+    .title b{font-size:15px}
+    .title span{font-size:12px; color:var(--muted)}
+    .statuspill{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px; border:1px solid var(--line);
+      border-radius:999px; background: rgba(17,27,48,.6);
+    }
+    .dot{width:10px; height:10px; border-radius:999px; background: var(--ok); box-shadow: 0 0 0 6px rgba(34,197,94,.15);}
+    .statuspill .small{font-size:12px; color:var(--muted)}
+    .grid{
+      display:grid; gap:16px;
+      grid-template-columns: 1.2fr .8fr;
+      margin-top:18px;
+    }
+    @media (max-width: 980px){ .grid{grid-template-columns:1fr} }
+    .panel{
+      background: rgba(17,27,48,.72);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .panel .head{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 14px;
+      border-bottom:1px solid var(--line);
+      background: rgba(15,23,42,.4);
+    }
+    .panel .head h3{margin:0; font-size:14px}
+    .panel .head .meta{font-size:12px; color:var(--muted)}
+    .panel .body{padding:14px}
+    .cards{
+      display:grid; grid-template-columns: repeat(4, 1fr);
+      gap:12px;
+    }
+    @media (max-width:980px){ .cards{grid-template-columns:repeat(2,1fr)} }
+    .card{
+      border:1px solid var(--line); border-radius:14px;
+      background: rgba(15,23,42,.55);
+      padding:12px; min-height:92px;
+    }
+    .k{font-size:12px; color:var(--muted); display:flex; align-items:center; justify-content:space-between; gap:10px}
+    .v{font-size:22px; margin-top:8px; font-weight:700}
+    .badge{
+      font-size:11px; padding:4px 8px; border-radius:999px;
+      border:1px solid var(--line); color:var(--muted);
+      background: rgba(17,27,48,.5);
+      white-space:nowrap;
+    }
+    .badge.ok{color:#bbf7d0; border-color:rgba(34,197,94,.35); background:rgba(34,197,94,.10)}
+    .badge.warn{color:#fde68a; border-color:rgba(245,158,11,.35); background:rgba(245,158,11,.10)}
+    .row{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+    @media (max-width:980px){ .row{grid-template-columns:1fr} }
+    .controls{
+      display:grid; grid-template-columns: 1fr; gap:12px;
+    }
+    .btnrow{display:flex; flex-wrap:wrap; gap:10px}
+    button{
+      cursor:pointer; border:1px solid var(--line);
+      background: rgba(17,27,48,.7); color:var(--text);
+      border-radius: 12px; padding:10px 12px; font-weight:600;
+    }
+    button.primary{border-color:rgba(96,165,250,.45); background:rgba(96,165,250,.12)}
+    button.danger{border-color:rgba(239,68,68,.45); background:rgba(239,68,68,.10)}
+    .toggle{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:12px; border:1px solid var(--line); border-radius:14px;
+      background: rgba(15,23,42,.55);
+    }
+    .toggle small{color:var(--muted)}
+    input[type="range"]{width: 180px;}
+    .log{
+      height: 220px; overflow:auto; padding-right:6px;
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .event{
+      border:1px solid var(--line); border-radius:12px;
+      background: rgba(15,23,42,.55);
+      padding:10px 12px;
+      font-size:12px; color:var(--muted);
+    }
+    .event b{color:var(--text)}
+    footer{color:var(--muted); font-size:12px; padding:22px 18px; text-align:center}
+    canvas{max-height:280px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div class="title">
+          <b>Edificio IA — Centro de Control</b>
+          <span id="clock">Sincronizando…</span>
+        </div>
+      </div>
+      <div class="statuspill">
+        <div class="dot" id="dot"></div>
+        <div>
+          <div style="font-weight:700;font-size:13px" id="modeText">Modo IA: Predictivo</div>
+          <div class="small" id="healthText">Sistemas: Estables • Latencia: 42ms</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="panel">
+      <div class="head">
+        <h3>Indicadores en tiempo real</h3>
+        <div class="meta" id="updated">Actualizado: —</div>
+      </div>
+      <div class="body">
+        <div class="cards">
+          <div class="card">
+            <div class="k">Consumo instantáneo <span class="badge ok" id="bPower">Óptimo</span></div>
+            <div class="v"><span id="power">—</span> kW</div>
+          </div>
+          <div class="card">
+            <div class="k">Temperatura promedio <span class="badge" id="bTemp">Auto</span></div>
+            <div class="v"><span id="temp">—</span> °C</div>
+          </div>
+          <div class="card">
+            <div class="k">CO₂ promedio <span class="badge ok" id="bCO2">Normal</span></div>
+            <div class="v"><span id="co2">—</span> ppm</div>
+          </div>
+          <div class="card">
+            <div class="k">Ocupación <span class="badge" id="bOcc">Estimado</span></div>
+            <div class="v"><span id="occ">—</span>%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <section class="panel">
+        <div class="head">
+          <h3>Consumo energético (últimas 12 horas)</h3>
+          <div class="meta">kW • Simulación dinámica</div>
+        </div>
+        <div class="body">
+          <canvas id="chartPower"></canvas>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="head">
+          <h3>Control de ambientes</h3>
+          <div class="meta">Automatización IA</div>
+        </div>
+        <div class="body controls">
+          <div class="toggle">
+            <div>
+              <b>Modo IA automático</b><br>
+              <small>Optimiza consumo y confort</small>
+            </div>
+            <button class="primary" id="btnIA">Activado</button>
+          </div>
+
+          <div class="toggle">
+            <div>
+              <b>Iluminación</b><br>
+              <small>Ajuste adaptativo por ocupación</small>
+            </div>
+            <div class="btnrow">
+              <button id="btnLights">Auto</button>
+              <button class="danger" id="btnAllOff">Apagar todo</button>
+            </div>
+          </div>
+
+          <div class="toggle">
+            <div>
+              <b>Climatización</b><br>
+              <small>Setpoint objetivo</small>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <input id="rangeTemp" type="range" min="18" max="28" value="22" />
+              <span style="font-weight:700"><span id="setTemp">22</span>°C</span>
+            </div>
+          </div>
+
+          <div class="toggle">
+            <div>
+              <b>Ventilación</b><br>
+              <small>Control por CO₂ y humedad</small>
+            </div>
+            <button id="btnVent">Auto</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="row">
+      <section class="panel">
+        <div class="head">
+          <h3>Confort (Temp / CO₂)</h3>
+          <div class="meta">Sensores por piso (simulado)</div>
+        </div>
+        <div class="body">
+          <canvas id="chartComfort"></canvas>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="head">
+          <h3>Registro de decisiones de la IA</h3>
+          <div class="meta">Eventos recientes</div>
+        </div>
+        <div class="body">
+          <div class="log" id="log"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    Demo académica • Edificio inteligente controlado por IA (simulación) • GitHub Pages
+  </footer>
+
+  <script>
+    // --- Utilidades ---
+    const $ = (id) => document.getElementById(id);
+    const clamp = (n,min,max)=>Math.max(min,Math.min(max,n));
+    const nowStr = ()=> new Date().toLocaleString('es-AR', { hour12:false });
+
+    // --- Estado simulado ---
+    let state = {
+      ia: true,
+      lights: "Auto",
+      vent: "Auto",
+      setTemp: 22,
+      power: 118,
+      temp: 22.4,
+      co2: 640,
+      occ: 58,
+      latency: 42
+    };
+
+    // --- UI ---
+    function setBadge(el, type, text){
+      el.className = "badge" + (type ? (" " + type) : "");
+      el.textContent = text;
+    }
+
+    function logEvent(title, detail){
+      const div = document.createElement("div");
+      div.className = "event";
+      div.innerHTML = `<b>${title}</b><br>${detail}<br><span style="opacity:.8">${nowStr()}</span>`;
+      const log = $("log");
+      log.prepend(div);
+      // limitar cantidad
+      while (log.children.length > 10) log.removeChild(log.lastChild);
+    }
+
+    function updateHeader(){
+      $("clock").textContent = "Conectado • " + nowStr();
+      $("updated").textContent = "Actualizado: " + nowStr();
+      $("healthText").textContent = `Sistemas: Estables • Latencia: ${state.latency}ms`;
+      $("modeText").textContent = "Modo IA: " + (state.ia ? "Predictivo" : "Manual");
+      $("dot").style.background = state.ia ? "var(--ok)" : "var(--warn)";
+    }
+
+    function updateKPIs(){
+      $("power").textContent = state.power.toFixed(0);
+      $("temp").textContent = state.temp.toFixed(1);
+      $("co2").textContent = state.co2.toFixed(0);
+      $("occ").textContent = state.occ.toFixed(0);
+
+      // Badges
+      setBadge($("bPower"), state.power < 140 ? "ok" : "warn", state.power < 140 ? "Óptimo" : "Alto");
+      setBadge($("bCO2"), state.co2 < 900 ? "ok" : "warn", state.co2 < 900 ? "Normal" : "Elevado");
+      setBadge($("bTemp"), "", state.ia ? "Auto" : "Manual");
+    }
+
+    // --- Gráficos ---
+    const labels = Array.from({length:12}, (_,i)=>`${(11-i)}h`).reverse();
+
+    let powerData = labels.map(()=> 110 + Math.random()*25);
+    const ctxPower = $("chartPower");
+    const chartPower = new Chart(ctxPower, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Consumo (kW)',
+          data: powerData,
+          tension: 0.35,
+          fill: true,
+          borderWidth: 2,
+          pointRadius: 2
+        }]
+      },
+      options: {
+        responsive:true,
+        plugins:{ legend:{display:false} },
+        scales:{
+          x:{ grid:{display:false}, ticks:{ color:'rgba(229,231,235,.7)'} },
+          y:{ grid:{ color:'rgba(148,163,184,.18)'}, ticks:{ color:'rgba(229,231,235,.7)'} }
+        }
+      }
+    });
+
+    const floors = ["PB","1°","2°","3°","4°","5°"];
+    let tData = floors.map(()=> 21.2 + Math.random()*2.2);
+    let cData = floors.map(()=> 560 + Math.random()*240);
+
+    const ctxComfort = $("chartComfort");
+    const chartComfort = new Chart(ctxComfort, {
+      type:'bar',
+      data:{
+        labels:floors,
+        datasets:[
+          { label:'Temperatura (°C)', data:tData, borderWidth:1 },
+          { label:'CO₂ (ppm)', data:cData, borderWidth:1 }
+        ]
+      },
+      options:{
+        responsive:true,
+        plugins:{ legend:{ labels:{ color:'rgba(229,231,235,.8)'} } },
+        scales:{
+          x:{ grid:{display:false}, ticks:{ color:'rgba(229,231,235,.7)'} },
+          y:{ grid:{ color:'rgba(148,163,184,.18)'}, ticks:{ color:'rgba(229,231,235,.7)'} }
+        }
+      }
+    });
+
+    // --- Simulación IA ---
+    function tick(){
+      // Ocupación fluctúa
+      state.occ = clamp(state.occ + (Math.random()*8-4), 10, 95);
+
+      // Si IA está activa, ajusta consumo/variables de forma "inteligente"
+      if(state.ia){
+        // consumo base depende de ocupación
+        const targetPower = 90 + state.occ*0.9 + (state.lights==="On"?20:0);
+        state.power += (targetPower - state.power)*0.15 + (Math.random()*6-3);
+
+        // temperatura tiende al setpoint
+        state.temp += (state.setTemp - state.temp)*0.12 + (Math.random()*0.2-0.1);
+
+        // CO2 sube con ocupación, baja con ventilación
+        const ventFactor = (state.vent==="On") ? 1.25 : (state.vent==="Off" ? 0.6 : 1.0);
+        const co2Target = 520 + state.occ*6.2 / ventFactor;
+        state.co2 += (co2Target - state.co2)*0.10 + (Math.random()*25-12);
+
+        // decisiones IA (logs)
+        if(state.co2 > 900 && state.vent!=="On"){
+          state.vent = "On";
+          $("btnVent").textContent = "On";
+          logEvent("IA: Ventilación aumentada", "CO₂ elevado detectado. Activando ventilación reforzada.");
+        }
+        if(state.power > 150 && state.lights!=="Auto"){
+          state.lights = "Auto";
+          $("btnLights").textContent = "Auto";
+          logEvent("IA: Iluminación a Auto", "Consumo alto. Ajuste adaptativo activado.");
+        }
+      }else{
+        // modo manual: deriva un poco
+        state.power = clamp(state.power + (Math.random()*10-5), 70, 220);
+        state.temp = clamp(state.temp + (Math.random()*0.4-0.2), 18, 30);
+        state.co2 = clamp(state.co2 + (Math.random()*60-30), 450, 1400);
+      }
+
+      state.latency = clamp(state.latency + (Math.random()*6-3), 18, 95);
+
+      // refrescar gráficas
+      powerData.push(clamp(state.power + (Math.random()*5-2.5), 60, 220));
+      powerData.shift();
+      chartPower.data.datasets[0].data = powerData;
+      chartPower.update('none');
+
+      // actualizar sensores por piso
+      tData = floors.map(()=> clamp(state.temp + (Math.random()*0.8-0.4), 18, 28));
+      cData = floors.map(()=> clamp(state.co2 + (Math.random()*120-60), 450, 1400));
+      chartComfort.data.datasets[0].data = tData;
+      chartComfort.data.datasets[1].data = cData;
+      chartComfort.update('none');
+
+      updateHeader();
+      updateKPIs();
+    }
+
+    // --- Controles ---
+    $("btnIA").onclick = ()=>{
+      state.ia = !state.ia;
+      $("btnIA").textContent = state.ia ? "Activado" : "Desactivado";
+      logEvent("Modo IA cambiado", state.ia ? "IA Predictiva activada." : "Control manual activado.");
+      updateHeader(); updateKPIs();
+    };
+
+    $("btnLights").onclick = ()=>{
+      if(state.lights==="Auto") state.lights="On";
+      else if(state.lights==="On") state.lights="Off";
+      else state.lights="Auto";
+      $("btnLights").textContent = state.lights;
+      logEvent("Iluminación", `Cambio de estado: ${state.lights}`);
+    };
+
+    $("btnVent").onclick = ()=>{
+      if(state.vent==="Auto") state.vent="On";
+      else if(state.vent==="On") state.vent="Off";
+      else state.vent="Auto";
+      $("btnVent").textContent = state.vent;
+      logEvent("Ventilación", `Cambio de estado: ${state.vent}`);
+    };
+
+    $("btnAllOff").onclick = ()=>{
+      state.lights = "Off";
+      state.vent = "Off";
+      $("btnLights").textContent = "Off";
+      $("btnVent").textContent = "Off";
+      logEvent("Acción crítica", "Apagado general de iluminación y ventilación.");
+    };
+
+    $("rangeTemp").oninput = (e)=>{
+      state.setTemp = Number(e.target.value);
+      $("setTemp").textContent = state.setTemp;
+      if(!state.ia) logEvent("Setpoint", `Setpoint ajustado a ${state.setTemp}°C (Manual)`);
+    };
+
+    // init
+    logEvent("Sistema iniciado", "Telemetría virtual en ejecución. Dashboard listo para demo.");
+    updateHeader(); updateKPIs();
+    setInterval(tick, 1500);
+  </script>
+</body>
+</html>
